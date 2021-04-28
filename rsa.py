@@ -1,12 +1,6 @@
 import random
 import math
 
-public_keys = {}
-
-def add_public_key(name, key):
-    """Add a public key to the list"""
-    public_keys[name] = key
-
 def is_prime(n):
     """Check if a number is prime"""
     if n == 2:
@@ -31,23 +25,26 @@ def decrypt(c, pk):
     return "".join(message)
 
 def generate_keys(minimum):
+    """Generate an RSA key pair given some minimum threshold 
+    for the numbers"""
     p, q = get_prime(minimum), get_prime(minimum)
     n = p * q
     phi = (p - 1) * (q - 1)
 
     e = get_coprime(phi, minimum)
-    print(e)
 
     d = multiplicative_inverse(e, phi)
 
     return (n,e), (n,d)
 
 def gcd(a, b):
+    """Calculate the greatest common divisor of a and b"""
     while b != 0:
         (a,b) = (b, a % b)
     return a
 
 def gcd_extended(a, b):
+    """Apply the extended gcd algorithm to a and b"""
     if a == 0:
         return (b, 0, 1)
     else:
@@ -55,6 +52,7 @@ def gcd_extended(a, b):
         return (g, x - b//a * y, y)
 
 def multiplicative_inverse(a, n):
+    """Calculate the multiplicative inverse of a mod n"""
     g, x, y = gcd_extended(a, n)
     if g != 1:
         raise Exception("Modular inverse does not exist")
@@ -62,31 +60,29 @@ def multiplicative_inverse(a, n):
         return x % n
 
 def get_prime(minimum):
+    """Find a random prime number greater than some minimum 
+    threshold"""
     p = random.randint(minimum, 10*minimum)
     while not is_prime(p):
         p = random.randint(minimum, 10*minimum)
     return p
 
 def get_coprime(phi, minimum):
+    """Find a random number greater than some minimum threshold 
+    that is coprime with phi"""
     e = random.randint(minimum, 10*minimum)
     while gcd(phi, e) != 1:
         e = random.randint(minimum, 10*minimum)
     return e
 
-#pub_key, priv_key = generate_keys(100)
-#print(pub_key,priv_key)
+def main():
+    pub_key, priv_key = generate_keys(100)
+    print(pub_key,priv_key)
 
-#pub_key = [3233,17]
-#priv_key = [3233, 2753]
+    encrypted = encrypt("Hello",pub_key)
+    print(encrypted)
 
-#print(encrypt("Hello",pub_key))
-#print(decrypt("ஸԡ˩˩ࢉ",priv_key))
+    print(decrypt(encrypted,priv_key))
 
-#pub_key = [175187,5]
-#priv_key = [175187, 139373]
-
-pub_key = [286271, 781]
-priv_key = [286271, 240277]
-
-print(encrypt("Purple Pimento",pub_key))
-print(decrypt("𳶦񅯧𤟺𼻬𼌍𼃥𰚏𳶦𑋂𾄎𼃥𙊨𞅲񄗩",priv_key))
+if __name__ == "__main__":
+    main()
