@@ -28,6 +28,8 @@ def generate_keys(minimum):
     """Generate an RSA key pair given some minimum threshold 
     for the numbers"""
     p, q = get_prime(minimum), get_prime(minimum)
+    while p == q:
+        p = get_prime(minimum)
     n = p * q
     phi = (p - 1) * (q - 1)
 
