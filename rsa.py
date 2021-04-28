@@ -21,9 +21,18 @@ def is_prime(n):
 def encrypt(M, pk):
     """Encrypts a message, M, given a public key pair (n and e)"""
     n, e = pk
-    ciphertext = [ord(char)**e % n for char in M]
-    return ciphertext
+    ciphertext = [chr(ord(char)**e % n) for char in M]
+    return "".join(ciphertext)
 
-def decrypt(c, d):
-    """Decrypt a ciphertext, c, using the private key d"""
-    
+def decrypt(c, pk):
+    """Decrypt a ciphertext, c, using the private key"""
+    n, d = pk
+    message = [chr(ord(char)**d % n) for char in c]
+    return "".join(message)
+
+pub_key = [3233,17]
+priv_key = [3233, 2753]
+
+print(encrypt("Hello",pub_key))
+
+print(decrypt("ஸԡ˩˩ࢉ",priv_key))
